@@ -8,7 +8,6 @@ const SchoolsIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-8
 const DistributionIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m-15.357-2a8.001 8.001 0 0015.357 2M9 15h9" /></svg>;
 const UsersIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>;
 
-
 function Dashboard() {
   const [stats, setStats] = useState({
     totalContributions: 0,
@@ -142,6 +141,12 @@ function Dashboard() {
             title="Admin Users"
             description="Manage administrator accounts."
             icon={<UsersIcon />}
+          />
+          <ActionCard
+            to="/report"
+            title="Reports"
+            description="View and download transaction summaries."
+            icon={<span className="text-3xl">📄</span>}
           />
         </div>
       </div>

@@ -4,7 +4,7 @@ import ContributionForm from "../components/ContributionForm";
 function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#dfe6e9] via-[#dfe6e9] to-[#dfe6e9] flex flex-col items-center justify-center p-6 text-white">
-      <div className="bg-[#0984e3] bg-opacity-20 backdrop-filter backdrop-blur-xl shadow-2xl rounded-3xl p-10 md:p-16 max-w-2xl w-full text-center">
+      <div className="bg-[#27548A] bg-opacity-20 backdrop-filter backdrop-blur-xl shadow-2xl rounded-3xl p-10 md:p-16 max-w-2xl w-full text-center">
         <h1 className="text-4xl md:text-5xl font-medium tracking-tight text-gray-100 mb-8">
           Welcome to Dusangire Lunch
         </h1>

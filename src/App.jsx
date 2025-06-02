@@ -4,71 +4,80 @@ import Dashboard from "./pages/Dashboard";
 import ContributionsList from "./pages/ContributionsList";
 import SchoolsList from "./pages/SchoolsList";
 import DistributionPage from "./pages/DistributionPage";
-import LoginPage from "./pages/LoginPage"; // Import LoginPage
-import API from "./api/api"; // Import API to use for token check
-import AdminLayout from "./components/AdminLayout"; // Import AdminLayout
-import AdminUsersPage from "./pages/AdminUsersPage"; // Import AdminUsersPage
+import LoginPage from "./pages/LoginPage";
+import API from "./api/api";
+import AdminLayout from "./components/AdminLayout";
+import AdminUsersPage from "./pages/AdminUsersPage";
+import Report from "./pages/Report"; // ✅ Use Report instead of ReportPage
+import AdminReportsPage from "./pages/AdminReportsPage";
 
 
 // ProtectedRoute component
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem("accessToken");
   if (!token) {
-    // If no token, redirect to login
     return <Navigate to="/login" replace />;
   }
-  // If token exists, set it in API headers for subsequent requests
   API.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   return <AdminLayout>{children}</AdminLayout>;
 };
-
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<LoginPage />} /> {/* Add login route */}
-        <Route 
-          path="/admin" 
+        <Route path="/login" element={<LoginPage />} />
+
+        <Route
+          path="/admin"
           element={
             <ProtectedRoute>
               <Dashboard />
             </ProtectedRoute>
-          } 
+          }
         />
-        <Route 
-          path="/admin/contributions" 
+        <Route
+          path="/admin/contributions"
           element={
             <ProtectedRoute>
               <ContributionsList />
             </ProtectedRoute>
-          } 
+          }
         />
-        <Route 
-          path="/admin/schools" 
+        <Route
+          path="/admin/schools"
           element={
             <ProtectedRoute>
               <SchoolsList />
             </ProtectedRoute>
-          } 
+          }
         />
-        <Route 
-          path="/admin/distribute" 
+        <Route
+          path="/admin/distribute"
           element={
             <ProtectedRoute>
               <DistributionPage />
             </ProtectedRoute>
-          } 
+          }
         />
-        <Route 
-          path="/admin/users" 
+        <Route
+          path="/admin/users"
           element={
             <ProtectedRoute>
               <AdminUsersPage />
             </ProtectedRoute>
-          } 
+          }
         />
+        <Route
+          path="/admin/reports"
+          element={
+            <ProtectedRoute>
+              <AdminReportsPage />
+            </ProtectedRoute>
+          }
+        />
+
       </Routes>
     </Router>
   );
