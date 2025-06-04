@@ -78,6 +78,14 @@ function ContributionsList() {
 
   const donors = [...new Set(contributions.map((c) => c.Donor))];
 
+  const formatNumber = (num) => {
+    if (!num) return '0';
+    // Remove any existing commas and decimal places
+    const cleanNum = String(num).replace(/,/g, '').split('.')[0];
+    // Add commas for thousands
+    return cleanNum.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
+
   return (
     <div className="p-6">
       <h1 className="text-4xl font-bold mb-10 text-center text-[#27548A]">Transfers Management</h1>
@@ -173,14 +181,13 @@ function ContributionsList() {
           <tbody>
             {currentItems.map((item, index) => (
               <tr key={index} className="border-b hover:bg-gray-50">
-                {console.log(item)}
                 <td className="p-3">{indexOfFirstItem + index + 1}</td>
                 <td className="p-3">{item.SchoolCode}</td>
                 <td className="p-3">{item.school_name || (item.schools?.[0]?.name ?? 'N/A')}</td>
                 <td className="p-3">{item.AccountNumber || 'N/A'}</td>
                 <td className="p-3">{item.Donor}</td>
-                <td className="p-3">{item.Total_Amount}</td>
-                <td className="p-3">{item.NumberOfTransactions}</td>
+                <td className="p-3 text-right">{formatNumber(item.Total_Amount)}</td>
+                <td className="p-3 text-center">{item.NumberOfTransactions}</td>
               </tr>
             ))}
           </tbody>
