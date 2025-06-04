@@ -9,8 +9,8 @@ function SchoolsList() {
   const [formSuccess, setFormSuccess] = useState("");
   const [newSchool, setNewSchool] = useState({
     name: "",
-    district: "",
-    sector: "",
+    district: "Unknown",  // Set default values
+    sector: "Unknown"     // Set default values
   });
 
   const fetchSchools = () => {
@@ -23,9 +23,9 @@ function SchoolsList() {
     fetchSchools();
   }, []);
 
+  // Simplify handleInputChange to only handle name
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setNewSchool((prev) => ({ ...prev, [name]: value }));
+    setNewSchool(prev => ({ ...prev, name: e.target.value }));
   };
 
   const handleSubmitNewSchool = (e) => {
@@ -35,7 +35,7 @@ function SchoolsList() {
     API.createSchool(newSchool)
       .then(() => {
         setFormSuccess("School created successfully!");
-        setNewSchool({ name: "", district: "", sector: "" }); // Reset form
+        setNewSchool({ name: "", district: "Unknown", sector: "Unknown" }); // Reset form
         fetchSchools(); // Refresh the list
       })
       .catch((err) => {
@@ -52,7 +52,7 @@ function SchoolsList() {
   return (
     <>
       <h1 className="text-4xl font-bold mb-10 text-center text-[#27548A]">Schools Management</h1>
-      
+
       {/* Form to add new school */}
       <div className="bg-white/90 backdrop-blur-xl shadow-2xl rounded-3xl p-6 sm:p-8 max-w-2xl mx-auto mb-12">
         <h2 className="text-2xl font-semibold mb-6 text-[#27548A]">Add New School</h2>
@@ -61,17 +61,20 @@ function SchoolsList() {
         <form onSubmit={handleSubmitNewSchool} className="space-y-6">
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-gray-700">School Name</label>
-            <input type="text" name="name" id="name" value={newSchool.name} onChange={handleInputChange} required className="mt-1 block w-full px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#27548A] focus:border-[#27548A] sm:text-sm text-gray-900" />
+            <input
+              type="text"
+              name="name"
+              id="name"
+              value={newSchool.name}
+              onChange={handleInputChange}
+              required
+              className="mt-1 block w-full px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#27548A] focus:border-[#27548A] sm:text-sm text-gray-900"
+            />
           </div>
-          <div>
-            <label htmlFor="district" className="block text-sm font-medium text-gray-700">District</label>
-            <input type="text" name="district" id="district" value={newSchool.district} onChange={handleInputChange} required className="mt-1 block w-full px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#27548A] focus:border-[#27548A] sm:text-sm text-gray-900" />
-          </div>
-          <div>
-            <label htmlFor="sector" className="block text-sm font-medium text-gray-700">Sector</label>
-            <input type="text" name="sector" id="sector" value={newSchool.sector} onChange={handleInputChange} required className="mt-1 block w-full px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#27548A] focus:border-[#27548A] sm:text-sm text-gray-900" />
-          </div>
-          <button type="submit" className="w-full sm:w-auto px-6 py-3 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-[#27548A] hover:bg-[#183B4E] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#27548A] focus:ring-offset-gray-100">
+          <button
+            type="submit"
+            className="w-full sm:w-auto px-6 py-3 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-[#27548A] hover:bg-[#183B4E] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#27548A] focus:ring-offset-gray-100"
+          >
             Add School
           </button>
         </form>

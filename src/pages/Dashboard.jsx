@@ -10,7 +10,7 @@ const UsersIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w
 
 function Dashboard() {
   const [stats, setStats] = useState({
-    totalContributions: 0,
+    totalTransfers: 0,
     numberOfSchools: 0,
     totalDistributed: 0,
   });
@@ -22,14 +22,14 @@ function Dashboard() {
       try {
         setLoading(true);
         setError("");
-        const [contributionsRes, schoolsRes, distributionsRes] = await Promise.all([
-          API.getContributions(),
+        const [transfersRes, schoolsRes, distributionsRes] = await Promise.all([
+          API.getTransfers(),
           API.getSchools(),
           API.getDistributions(),
         ]);
 
-        const totalContributions = contributionsRes.data.reduce(
-          (sum, c) => sum + parseFloat(c.amount),
+        const totalTransfers = transfersRes.data.reduce(
+          (sum, t) => sum + parseFloat(t.Total_Amount),
           0
         );
         const numberOfSchools = schoolsRes.data.length;
@@ -39,7 +39,7 @@ function Dashboard() {
         );
 
         setStats({
-          totalContributions,
+          totalTransfers,
           numberOfSchools,
           totalDistributed,
         });
@@ -81,7 +81,7 @@ function Dashboard() {
     <Link to={to} className="block bg-white/90 backdrop-blur-xl shadow-lg rounded-xl p-6 hover:shadow-2xl transition-shadow duration-300 ease-in-out group">
       <div className="flex items-center mb-3">
         <div className="p-2 mr-3 rounded-md bg-gray-100 group-hover:bg-gray-200 transition-colors">
-            {icon}
+          {icon}
         </div>
         <h2 className="text-xl font-semibold text-[#27548A] group-hover:text-[#183B4E] transition-colors">{title}</h2>
       </div>
@@ -95,22 +95,22 @@ function Dashboard() {
 
       {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <StatCard 
-          title="Total Contributions" 
-          value={stats.totalContributions.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} 
+        <StatCard
+          title="Total Transfers"
+          value={stats.totalTransfers.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           unit="RWF"
-          icon={<ContributionsIcon />} 
+          icon={<ContributionsIcon />}
         />
-        <StatCard 
-          title="Registered Schools" 
-          value={stats.numberOfSchools} 
-          icon={<SchoolsIcon />} 
+        <StatCard
+          title="Registered Schools"
+          value={stats.numberOfSchools}
+          icon={<SchoolsIcon />}
         />
-        <StatCard 
-          title="Total Funds Distributed" 
-          value={stats.totalDistributed.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} 
+        <StatCard
+          title="Total Funds Distributed"
+          value={stats.totalDistributed.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
           unit="RWF"
-          icon={<DistributionIcon />} 
+          icon={<DistributionIcon />}
         />
       </div>
 
@@ -119,9 +119,9 @@ function Dashboard() {
         <h2 className="text-2xl font-semibold text-[#27548A] mb-4 mt-10">Manage System</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6">
           <ActionCard
-            to="/admin/contributions"
-            title="Contributions"
-            description="View and manage all contributions."
+            to="/admin/transfers"
+            title="Transfers"
+            description="View and manage all transfers."
             icon={<ContributionsIcon />}
           />
           <ActionCard

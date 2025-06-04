@@ -41,13 +41,23 @@ const generateReport = (reportData) => API.post("/reports/generate/", reportData
 const downloadReport = (id) => API.get(`/reports/${id}/download/`, { responseType: "blob" });
 
 // ==========================
-// 💳 Contributions APIs
+// 💳 Transfers APIs
 // ==========================
-const createContribution = (data) => API.post("/contributions/", data);
-const getContributions = () => API.get("/contributions/");
+const createTransfer = (data) => API.post("/transfers/", {
+  SchoolCode: data.SchoolCode,
+  Donor: data.Donor,
+  Total_Amount: data.Total_Amount,
+  contribution_type: data.contribution_type,
+  AccountNumber: data.AccountNumber,
+  NumberOfPayments: data.NumberOfPayments,
+  NumberOfTransactions: data.NumberOfTransactions,
+  timestamp: data.timestamp,
+  school_ids: data.school_ids || []
+});
+const getTransfers = () => API.get("/transfers/");
 const simulatePayment = (data) => API.post("/simulate-payment/", data);
-const uploadContributions = (formData) => {
-  return API.post("/contributions/upload/", formData, {
+const uploadTransfers = (formData) => {
+  return API.post("/transfers/upload/", formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
@@ -81,14 +91,14 @@ export default {
   getReports,
   generateReport,
   downloadReport,
-  createContribution,
-  getContributions,
+  createTransfer,
+  getTransfers,
   simulatePayment,
   getSchools,
   createSchool,
   distributeFunds,
   getDistributions,
   getAdminUsers,
-  uploadContributions,
+  uploadTransfers,
   defaults: API.defaults,
 };
