@@ -12,6 +12,7 @@ function ContributionsList() {
   const [uploading, setUploading] = useState(false);
 
   const [searchTerm, setSearchTerm] = useState("");
+  const [tempSearchTerm, setTempSearchTerm] = useState(""); // New state for temporary search term
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
   const [filters, setFilters] = useState({
@@ -56,6 +57,28 @@ function ContributionsList() {
     }
   };
 
+  const handleSearch = () => {
+    setSearchTerm(tempSearchTerm);
+
+    // Find the index of the first matching item
+    const matchingIndex = contributions.findIndex((transfer) => {
+      const searchLower = tempSearchTerm.toLowerCase();
+      return (
+        transfer.SchoolCode?.toLowerCase().includes(searchLower) ||
+        transfer.Donor?.toLowerCase().includes(searchLower) ||
+        (transfer.schools && transfer.schools.some((school) =>
+          school.name.toLowerCase().includes(searchLower)
+        ))
+      );
+    });
+
+    // If found, calculate and set the correct page
+    if (matchingIndex !== -1) {
+      const targetPage = Math.floor(matchingIndex / itemsPerPage) + 1;
+      setCurrentPage(targetPage);
+    }
+  };
+
   const filteredContributions = contributions.filter((transfer) => {
     const matchesSearch =
       transfer.SchoolCode?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -86,19 +109,56 @@ function ContributionsList() {
     return cleanNum.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
+  // Add this new function before the return statement
+  const renderPageNumbers = () => {
+    const pageNumbers = [];
+    const maxVisiblePages = 5;
+
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+    // Adjust start if we're near the end
+    startPage = Math.max(1, endPage - maxVisiblePages + 1);
+
+    for (let i = startPage; i <= endPage; i++) {
+      pageNumbers.push(
+        <button
+          key={i}
+          onClick={() => paginate(i)}
+          className={`px-3 py-1 mx-1 rounded-lg ${currentPage === i
+              ? 'bg-[#27548A] text-white'
+              : 'border hover:bg-gray-100'
+            }`}
+        >
+          {i}
+        </button>
+      );
+    }
+    return pageNumbers;
+  };
+
   return (
     <div className="p-6">
       <h1 className="text-4xl font-bold mb-10 text-center text-[#27548A]">Transfers Management</h1>
 
       {/* Search and Filters */}
       <div className="mb-6 flex flex-wrap gap-4">
-        <input
-          type="text"
-          placeholder="Search transfers..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="flex-1 p-2 border rounded-lg focus:ring-[#27548A]"
-        />
+        <div className="flex-1 flex gap-2">
+          <input
+            type="text"
+            placeholder="Search transfers..."
+            value={tempSearchTerm}
+            onChange={(e) => setTempSearchTerm(e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+            className="flex-1 p-2 border rounded-lg focus:ring-[#27548A]"
+          />
+          <button
+            onClick={handleSearch}
+            className="bg-[#27548A] text-white px-4 py-2 rounded-lg hover:bg-[#1e3f68]"
+          >
+            Search
+          </button>
+        </div>
         <select
           value={filters.donor}
           onChange={(e) => setFilters((prev) => ({ ...prev, donor: e.target.value }))}
@@ -195,18 +255,25 @@ function ContributionsList() {
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-between items-center mt-4">
+      <div className="flex justify-center items-center gap-2 mt-4">
+        <button
+          onClick={() => paginate(1)}
+          disabled={currentPage === 1}
+          className="px-3 py-1 border rounded-lg disabled:opacity-50"
+        >
+          First
+        </button>
         <button
           onClick={() => paginate(currentPage - 1)}
           disabled={currentPage === 1}
           className="px-3 py-1 border rounded-lg disabled:opacity-50"
         >
-          Previous
+          Prev
         </button>
 
-        <span className="text-sm text-gray-700">
-          Page {currentPage} of {totalPages}
-        </span>
+        <div className="flex mx-2">
+          {renderPageNumbers()}
+        </div>
 
         <button
           onClick={() => paginate(currentPage + 1)}
@@ -214,6 +281,13 @@ function ContributionsList() {
           className="px-3 py-1 border rounded-lg disabled:opacity-50"
         >
           Next
+        </button>
+        <button
+          onClick={() => paginate(totalPages)}
+          disabled={currentPage === totalPages}
+          className="px-3 py-1 border rounded-lg disabled:opacity-50"
+        >
+          Last
         </button>
       </div>
 

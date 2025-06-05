@@ -49,7 +49,6 @@ const createTransfer = (data) => API.post("/transfers/", {
   Total_Amount: data.Total_Amount,
   contribution_type: data.contribution_type,
   AccountNumber: data.AccountNumber,
-  NumberOfPayments: data.NumberOfPayments,
   NumberOfTransactions: data.NumberOfTransactions,
   timestamp: data.timestamp,
   school_ids: data.school_ids || []
