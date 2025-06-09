@@ -8,7 +8,6 @@ import LoginPage from "./pages/LoginPage";
 import API from "./api/api";
 import AdminLayout from "./components/AdminLayout";
 import AdminUsersPage from "./pages/AdminUsersPage";
-import Report from "./pages/Report"; // ✅ Use Report instead of ReportPage
 import AdminReportsPage from "./pages/AdminReportsPage";
 
 
@@ -77,6 +76,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/report" element={<AdminReportsPage />} />
 
       </Routes>
     </Router>

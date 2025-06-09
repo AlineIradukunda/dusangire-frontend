@@ -1,24 +1,45 @@
 import axios from "axios";
 
-const BASE_URL = "http://127.0.0.1:8000/api"; // Update if needed
+// Default to localhost if no environment variable is set
+const BASE_URL = "http://localhost:8000/api";
 
+// Create axios instance with default config
 const API = axios.create({
   baseURL: BASE_URL,
+  timeout: 10000,
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true,
 });
 
-// Add auth token to headers if present
+// Add request interceptor for authentication
 API.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("accessToken");
-    if (token && !config.headers.Authorization) {
+    const token = localStorage.getItem("token");
+    if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Add response interceptor for error handling
+API.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (!error.response) {
+      console.error("Network error detected:", error);
+      return Promise.reject({
+        message: "Server is unreachable. Please check your connection and try again.",
+        originalError: error,
+      });
+    }
+    return Promise.reject(error);
+  }
 );
 
 // ==========================
@@ -29,7 +50,7 @@ const refreshToken = (refreshToken) => API.post("/token/refresh/", { refresh: re
 const logout = () => {
   localStorage.removeItem("accessToken");
   localStorage.removeItem("refreshToken");
-  delete API.defaults.headers.common['Authorization'];
+  delete API.defaults.headers.common["Authorization"];
   delete API.defaults.headers.Authorization;
 };
 
@@ -37,7 +58,13 @@ const logout = () => {
 // 📊 Reports APIs
 // ==========================
 const getReports = () => API.get("/reports/");
-const generateReport = (reportData) => API.post("/reports/generate/", reportData);
+const generateReport = (params) => API.get("/reports/generate/", { 
+  params,
+  responseType: "blob",
+  headers: {
+    "Accept": "application/json, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, text/csv",
+  },
+});
 const downloadReport = (id) => API.get(`/reports/${id}/download/`, { responseType: "blob" });
 
 // ==========================
@@ -81,6 +108,11 @@ const getDistributions = () => API.get("/distributions/");
 const getAdminUsers = () => API.get("/admins/");
 
 // ==========================
+// Transaction Summary API
+// ==========================
+const getTransactionSummary = (params) => API.get('/transaction-summary/', { params });
+
+// ==========================
 // Export all API functions
 // ==========================
 export default {
@@ -99,5 +131,6 @@ export default {
   getDistributions,
   getAdminUsers,
   uploadTransfers,
+  getTransactionSummary,
   defaults: API.defaults,
 };

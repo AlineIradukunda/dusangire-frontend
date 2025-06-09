@@ -45,7 +45,13 @@ function Dashboard() {
         });
       } catch (err) {
         console.error("Failed to fetch dashboard data:", err);
-        setError("Failed to load dashboard data. Please try again later.");
+        const errorMessage = err.message || 'Failed to fetch dashboard data';
+        setError(errorMessage);
+        // Optionally show user-friendly error message
+        if (err.originalError?.code === 'ERR_NETWORK') {
+          // Handle network error specifically
+          console.error('Network Error:', err);
+        }
       } finally {
         setLoading(false);
       }
@@ -59,7 +65,12 @@ function Dashboard() {
   }
 
   if (error) {
-    return <div className="text-center py-10 text-red-500 bg-red-100 p-4 rounded-md">{error}</div>;
+    return (
+      <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+        <strong className="font-bold">Error!</strong>
+        <span className="block sm:inline"> {error}</span>
+      </div>
+    );
   }
 
   const StatCard = ({ title, value, icon, unit = "" }) => (
