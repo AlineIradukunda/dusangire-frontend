@@ -58,7 +58,7 @@ const logout = () => {
 // 📊 Reports APIs
 // ==========================
 const getReports = () => API.get("/reports/");
-const generateReport = (params) => API.get("/reports/generate/", { 
+const generateReport = (params) => API.get("/reports/generate/", {
   params,
   responseType: "blob",
   headers: {

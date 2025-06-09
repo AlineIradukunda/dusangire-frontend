@@ -58,8 +58,8 @@ function AdminReportsPage() {
 
             // Create a blob and download it
             const blob = new Blob([response.data], {
-                type: format === 'csv' 
-                    ? 'text/csv' 
+                type: format === 'csv'
+                    ? 'text/csv'
                     : 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
             });
             const url = window.URL.createObjectURL(blob);
