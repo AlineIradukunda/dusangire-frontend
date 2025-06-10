@@ -31,14 +31,19 @@ function AdminReportsPage() {
 
     const fetchTransactionSummary = async () => {
         try {
-            const response = await API.getTransactionSummary({
-                start_date: startDate,
-                end_date: endDate
-            });
-            setReportData(response.data);
+            const params = {};
+            if (startDate) params.start_date = startDate;
+            if (endDate) params.end_date = endDate;
+
+            const response = await API.getTransactionSummary(params);
+            if (response.data) {
+                setReportData(response.data);
+                setError("");
+            }
         } catch (error) {
             console.error("Failed to fetch transaction summary:", error);
-            setError("Failed to fetch transaction summary");
+            setError("Failed to fetch transaction summary. " + (error.response?.data?.error || ''));
+            setReportData([]);
         }
     };
 
@@ -87,12 +92,15 @@ function AdminReportsPage() {
     };
 
     const downloadCSV = () => {
-        const headers = ['School', 'Total Contributions (RWF)', 'Total Distributed (RWF)', 'Balance (RWF)'];
-        const rows = reportData.map(report => [
-            report.school_name,
-            report.total_contributions,
-            report.total_distributed,
-            report.balance
+        const headers = ['No', 'School Code', 'School Name', 'Account Number', 'Donor', 'Amount', 'Transactions'];
+        const rows = reportData.map((item, index) => [
+            index + 1,
+            item.SchoolCode,
+            item.school_name || (item.schools?.[0]?.name ?? 'N/A'),
+            item.AccountNumber || 'N/A',
+            item.Donor,
+            formatNumber(item.Total_Amount),
+            item.NumberOfTransactions
         ]);
 
         const csvContent = [headers, ...rows]
@@ -103,10 +111,16 @@ function AdminReportsPage() {
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
-        link.setAttribute('download', 'transaction_report.csv');
+        link.setAttribute('download', `transaction_summary_${startDate || 'all'}_${endDate || 'dates'}.csv`);
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+    };
+
+    const formatNumber = (num) => {
+        if (!num) return '0';
+        const cleanNum = String(num).replace(/,/g, '').split('.')[0];
+        return cleanNum.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     };
 
     return (
@@ -188,22 +202,28 @@ function AdminReportsPage() {
                     Download CSV Summary
                 </button>
                 <div className="overflow-x-auto">
-                    <table className="min-w-full bg-white border border-gray-200 rounded shadow">
-                        <thead>
-                            <tr className="bg-gray-100">
-                                <th className="px-4 py-2 text-left">School</th>
-                                <th className="px-4 py-2 text-left">Total Contributions (RWF)</th>
-                                <th className="px-4 py-2 text-left">Total Distributed (RWF)</th>
-                                <th className="px-4 py-2 text-left">Balance (RWF)</th>
+                    <table className="min-w-full table-auto">
+                        <thead className="bg-[#27548A] text-white">
+                            <tr>
+                                <th className="p-3">No</th>
+                                <th className="p-3">School Code</th>
+                                <th className="p-3">School Name</th>
+                                <th className="p-3">Account Number</th>
+                                <th className="p-3">Donor</th>
+                                <th className="p-3">Amount</th>
+                                <th className="p-3">Transactions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {reportData.map((report, index) => (
-                                <tr key={index} className="border-t hover:bg-gray-50">
-                                    <td className="px-4 py-2">{report.school_name}</td>
-                                    <td className="px-4 py-2">{report.total_contributions}</td>
-                                    <td className="px-4 py-2">{report.total_distributed}</td>
-                                    <td className="px-4 py-2">{report.balance}</td>
+                            {reportData.map((item, index) => (
+                                <tr key={index} className="border-b hover:bg-gray-50">
+                                    <td className="p-3">{index + 1}</td>
+                                    <td className="p-3">{item.SchoolCode}</td>
+                                    <td className="p-3">{item.school_name || (item.schools?.[0]?.name ?? 'N/A')}</td>
+                                    <td className="p-3">{item.AccountNumber || 'N/A'}</td>
+                                    <td className="p-3">{item.Donor}</td>
+                                    <td className="p-3 text-right">{formatNumber(item.Total_Amount)}</td>
+                                    <td className="p-3 text-center">{item.NumberOfTransactions}</td>
                                 </tr>
                             ))}
                         </tbody>
@@ -211,46 +231,7 @@ function AdminReportsPage() {
                 </div>
             </div>
 
-            {/* Display Existing Reports */}
-            <div className="bg-white rounded-2xl shadow-lg max-w-4xl mx-auto p-6">
-                <h2 className="text-xl font-semibold text-gray-800 mb-4">All Generated Reports</h2>
 
-                {loading ? (
-                    <p className="text-gray-600">Loading reports...</p>
-                ) : reports.length === 0 ? (
-                    <p className="text-gray-600">No reports found.</p>
-                ) : (
-                    <div className="overflow-x-auto">
-                        <table className="min-w-full text-sm text-left text-gray-700">
-                            <thead className="bg-gray-100 font-semibold text-gray-700">
-                                <tr>
-                                    <th className="px-6 py-4">Report Name</th>
-                                    <th className="px-6 py-4">Date Generated</th>
-                                    <th className="px-6 py-4">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {reports.map((report) => (
-                                    <tr key={report.id} className="border-t hover:bg-gray-50">
-                                        <td className="px-6 py-4">{report.name}</td>
-                                        <td className="px-6 py-4">
-                                            {new Date(report.date_generated).toLocaleString()}
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <button
-                                                onClick={() => handleDownload(report.file_url)}
-                                                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md shadow"
-                                            >
-                                                Download PDF
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                )}
-            </div>
         </div>
     );
 }

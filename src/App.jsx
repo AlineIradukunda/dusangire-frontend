@@ -76,7 +76,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/report" element={<AdminReportsPage />} />
+  
 
       </Routes>
     </Router>
