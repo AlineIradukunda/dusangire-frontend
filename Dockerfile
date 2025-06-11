@@ -1,13 +1,24 @@
-FROM docker.io/node:16.20.2-alpine
+# Build stage
+FROM node:18 AS builder
 
 WORKDIR /app
 
-COPY package*.json ./
+ENV NODE_ENV=production
+ENV VITE_NODE_ENV=production
+SHELL ["cmd", "/S", "/C"]
 
-RUN npm install
+COPY package*.json ./
+RUN npm ci
 
 COPY . .
+RUN npm run build
+
+# Serve stage
+FROM nginx:alpine
+
+COPY --from=builder /app/dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 
-CMD ["npm", "start"]
+CMD ["nginx", "-g", "daemon off;"]
