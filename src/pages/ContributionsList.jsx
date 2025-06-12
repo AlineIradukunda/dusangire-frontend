@@ -39,19 +39,39 @@ function ContributionsList() {
       return;
     }
 
+    // Validate file type
+    const fileType = selectedFile.name.split('.').pop().toLowerCase();
+    if (!['xlsx', 'xls'].includes(fileType)) {
+      setError("Please upload only Excel files (.xlsx or .xls)");
+      return;
+    }
+
     setUploading(true);
+    setError("");
+    setMessage("");
+
     const formData = new FormData();
     formData.append('file', selectedFile);
 
     try {
       const response = await API.uploadTransfers(formData);
+      console.log('Upload response:', response); // Debug log
       setMessage("File uploaded successfully!");
       fetchContributions();
       setIsModalOpen(false);
       setSelectedFile(null);
-      setError("");
     } catch (err) {
-      setError("Failed to upload file. Please try again.");
+      console.error('Upload error:', err); // Debug log
+      if (err.response) {
+        // Server responded with error
+        setError(`Upload failed: ${err.response.data.message || err.response.statusText}`);
+      } else if (err.request) {
+        // Request made but no response
+        setError("Network error. Please check your connection and try again.");
+      } else {
+        // Other errors
+        setError("Failed to upload file. Please try again.");
+      }
     } finally {
       setUploading(false);
     }
@@ -126,8 +146,8 @@ function ContributionsList() {
           key={i}
           onClick={() => paginate(i)}
           className={`px-3 py-1 mx-1 rounded-lg ${currentPage === i
-              ? 'bg-[#27548A] text-white'
-              : 'border hover:bg-gray-100'
+            ? 'bg-[#27548A] text-white'
+            : 'border hover:bg-gray-100'
             }`}
         >
           {i}
