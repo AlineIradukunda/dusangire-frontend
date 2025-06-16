@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import API from "../api/api";
+import backgroundImage from '../pages/images/abana.jpeg';
 
 // Icons for cards (can be replaced with more sophisticated ones or SVGs)
 const ContributionsIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>;
@@ -101,64 +102,76 @@ function Dashboard() {
   );
 
   return (
-    <div className="space-y-8">
-      <h1 className="text-3xl font-bold text-[#27548A]">Admin Dashboard</h1>
+    <div className="flex flex-col min-h-screen w-full">
+      <div
+        className="flex-1 bg-cover bg-center bg-no-repeat w-full"
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+          width: '100%'
+        }}
+      >
+        <div className="min-h-full bg-blue/100 backdrop-blur-sm px-8 py-10">
+          <div className="space-y-10">
+            <h1 className="text-4xl font-bold mb-10 text-center text-[#27548A]">School Feeding Contributions For Intended Schools</h1>
 
-      {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <StatCard
-          title="Total Transfers"
-          value={stats.totalTransfers.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-          unit="RWF"
-          icon={<ContributionsIcon />}
-        />
-        <StatCard
-          title="Registered Schools"
-          value={stats.numberOfSchools}
-          icon={<SchoolsIcon />}
-        />
-        <StatCard
-          title="Total Funds Distributed"
-          value={stats.totalDistributed.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-          unit="RWF"
-          icon={<DistributionIcon />}
-        />
-      </div>
+            {/* Stats Overview */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <StatCard
+                title="Total Transfers"
+                value={stats.totalTransfers.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                unit="RWF"
+                icon={<ContributionsIcon />}
+              />
+              <StatCard
+                title="Registered Schools"
+                value={stats.numberOfSchools}
+                icon={<SchoolsIcon />}
+              />
+              <StatCard
+                title="Total Funds Distributed"
+                value={stats.totalDistributed.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                unit="RWF"
+                icon={<DistributionIcon />}
+              />
+            </div>
 
-      {/* Quick Actions / Navigation */}
-      <div>
-        <h2 className="text-2xl font-semibold text-[#27548A] mb-4 mt-10">Manage System</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6">
-          <ActionCard
-            to="/admin/transfers"
-            title="Transfers"
-            description="View and manage all transfers."
-            icon={<ContributionsIcon />}
-          />
-          <ActionCard
-            to="/admin/schools"
-            title="Schools"
-            description="Manage school listings and details."
-            icon={<SchoolsIcon />}
-          />
-          <ActionCard
-            to="/admin/distribute"
-            title="Distribute Funds"
-            description="Allocate and distribute funds to schools."
-            icon={<DistributionIcon />}
-          />
-          <ActionCard
-            to="/admin/users"
-            title="Admin Users"
-            description="Manage administrator accounts."
-            icon={<UsersIcon />}
-          />
-          <ActionCard
-            to="/report"
-            title="Reports"
-            description="View and download transaction summaries."
-            icon={<span className="text-3xl">📄</span>}
-          />
+            {/* Quick Actions / Navigation */}
+            <div>
+              <h2 className="text-2xl font-semibold text-[#27548A] mb-4 mt-10">Manage System</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6">
+                <ActionCard
+                  to="/admin/contributions"
+                  title="Transfers"
+                  description="View and manage all transfers."
+                  icon={<ContributionsIcon />}
+                />
+                <ActionCard
+                  to="/admin/schools"
+                  title="Schools"
+                  description="Manage school listings and details."
+                  icon={<SchoolsIcon />}
+                />
+                <ActionCard
+                  to="/admin/distribute"
+                  title="Distribute Funds"
+                  description="Allocate and distribute funds to schools."
+                  icon={<DistributionIcon />}
+                />
+                <ActionCard
+                  to="/admin/users"
+                  title="Admin Users"
+                  description="Manage administrator accounts."
+                  icon={<UsersIcon />}
+                />
+                <ActionCard
+                  to="/admin/reports" // Updated from "/report" to match AdminReportsPage route
+                  title="Reports"
+                  description="View and download transaction summaries."
+                  icon={<span className="text-3xl">📄</span>}
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
