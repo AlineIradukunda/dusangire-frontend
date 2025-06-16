@@ -29,14 +29,24 @@ function AdminReportsPage() {
             });
     };
 
+    const validateDates = () => {
+        if (!startDate || !endDate) return true;
+        return new Date(startDate) <= new Date(endDate);
+    };
+
     const fetchTransactionSummary = async () => {
         try {
+            if (!validateDates()) {
+                setError("Start date must be before or equal to end date");
+                return;
+            }
+
             const params = {};
             if (startDate) params.start_date = startDate;
             if (endDate) params.end_date = endDate;
 
             const response = await API.getTransactionSummary(params);
-            if (response.data) {
+            if (response?.data) {
                 setReportData(response.data);
                 setError("");
             }
@@ -49,6 +59,12 @@ function AdminReportsPage() {
 
     const handleGenerateReport = async (e) => {
         e.preventDefault();
+
+        if (!validateDates()) {
+            setError("Start date must be before or equal to end date");
+            return;
+        }
+
         setGenerating(true);
         setError("");
 
@@ -56,32 +72,51 @@ function AdminReportsPage() {
             await fetchTransactionSummary();
 
             const response = await API.generateReport({
+                name: reportName,
                 start_date: startDate,
                 end_date: endDate,
                 format: format
             });
 
-            // Create a blob and download it
-            const blob = new Blob([response.data], {
-                type: format === 'csv'
-                    ? 'text/csv'
-                    : 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-            });
+            // Check if response exists and has data
+            if (!response || !response.data) {
+                throw new Error('No data received from server');
+            }
+
+            // Handle different response types
+            let blob;
+            if (response.data instanceof Blob) {
+                blob = response.data;
+            } else {
+                // If response is JSON or other format, convert it
+                blob = new Blob([JSON.stringify(response.data)], {
+                    type: format === 'csv' ? 'text/csv' : 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                });
+            }
+
+            // Create download link
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `report_${startDate}_${endDate}.${format}`;
+            a.download = `report_${startDate || 'all'}_${endDate || 'dates'}.${format}`;
             document.body.appendChild(a);
             a.click();
             window.URL.revokeObjectURL(url);
             document.body.removeChild(a);
 
+            // Clear form
             setReportName("");
             setStartDate("");
             setEndDate("");
+            setError("");
         } catch (err) {
-            setError(err.response?.data?.detail || "Failed to generate report.");
-            console.error(err);
+            console.error("Report generation error:", err);
+            setError(
+                err.response?.data?.message ||
+                err.response?.data?.detail ||
+                err.message ||
+                "Failed to generate report. Please try again."
+            );
         } finally {
             setGenerating(false);
         }

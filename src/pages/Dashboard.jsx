@@ -102,7 +102,7 @@ function Dashboard() {
   );
 
   return (
-    <div className="flex flex-col min-h-screen w-full">
+    <div className="flex flex-col min-h-full w-full">
       <div
         className="flex-1 bg-cover bg-center bg-no-repeat w-full"
         style={{
@@ -112,7 +112,7 @@ function Dashboard() {
       >
         <div className="min-h-full bg-blue/100 backdrop-blur-sm px-8 py-10">
           <div className="space-y-10">
-            <h1 className="text-4xl font-bold mb-10 text-center text-[#27548A]">School Feeding Contributions For Intended Schools</h1>
+            <h1 className="text-4xl font-bold mb-10 text-center text-white ">School Feeding Contributions For Intended Schools</h1>
 
             {/* Stats Overview */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

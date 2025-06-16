@@ -91,140 +91,113 @@ function AdminLayout({ children }) {
   };
 
   return (
-    <div className="flex flex-col h-screen font-arial">
+    <div className="relative flex flex-col font-arial">
       {/* Upper bar with contact info */}
-      <div>
-        <div className="h-5 w-full bg-[#002f6c]"></div>
-        <div className="flex justify-between items-center px-85">
-          <div className="contact flex text-[#003366] text-sm">
-            <p className="mr-5 flex items-center">
-              <img src={locationIcon} alt="Location" className="w-4 h-4 mx-1" />
-              KG 205 St, Kigali Gasabo Kimironko
-            </p>
-            <p className="mr-5 flex items-center">
-              <img src={mailIcon} alt="Mail" className="w-4 h-4 mx-1" />
-              umwalimu.sacco@umwalimusacco.rw
-            </p>
-            <p className="mr-5 flex items-center">
-              <img src={phoneIcon} alt="Phone" className="w-4 h-4 mx-1" />
-              +250 781 469 546
-            </p>
-          </div>
-          <div className="social-links flex flex-row py-1">
-            {Object.entries(socialIcons).map(([platform, { icon, url }]) => (
-              <a
-                key={platform}
-                href={url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mx-2 hover:opacity-80"
-              >
-                <img
-                  src={icon}
-                  alt={platform}
-                  className="w-4 h-4 align-middle"
-                />
-              </a>
-            ))}
+      <div className="bg-[#003366]">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex justify-between items-center px-4 py-2">
+            <div className="contact flex space-x-6 text-white text-sm">
+              <p className="flex items-center transition-transform hover:transform hover:translate-y-[-2px]">
+                <img src={locationIcon} alt="Location" className="w-4 h-4 mr-2 opacity-80" />
+                <span className="hidden md:inline">KG 205 St, Kigali Gasabo Kimironko</span>
+              </p>
+              <p className="flex items-center transition-transform hover:transform hover:translate-y-[-2px]">
+                <img src={mailIcon} alt="Mail" className="w-4 h-4 mr-2 opacity-80" />
+                <span className="hidden md:inline">umwalimu.sacco@umwalimusacco.rw</span>
+              </p>
+              <p className="flex items-center transition-transform hover:transform hover:translate-y-[-2px]">
+                <img src={phoneIcon} alt="Phone" className="w-4 h-4 mr-2 opacity-80" />
+                <span>+250 781 469 546</span>
+              </p>
+            </div>
+            <div className="social-links flex space-x-4">
+              {Object.entries(socialIcons).map(([platform, { icon, url }]) => (
+                <a
+                  key={platform}
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition-all hover:scale-110"
+                >
+                  <img src={icon} alt={platform} className="w-5 h-5 filter brightness-0 invert" />
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       </div>
 
       {/* Header Content */}
-      <header className="flex flex-col">
-        <div className="before-nav flex justify-between items-center px-6 py-4">
-          {/* Logo */}
-          <img src={logo} alt="Logo" className="w-[300px]" />
+      <header className="shadow-md">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex justify-between items-center px-6 py-4">
+            <img src={logo} alt="Logo" className="w-[250px] transition-transform hover:scale-105" />
 
-          {/* Language Section */}
-          <div className="flex items-center">
-            <div className="lang-social flex flex-row items-center mx-8 my-12">
-              <a href="#" className="flex items-center text-[#003366] mr-4">
-                <img src={frenchFlag} alt="FR" className="w-[30px] h-5 mx-[5px] align-middle" />
-                <span>FR</span>
-              </a>
-              <a href="#" className="flex items-center text-[#003366]">
-                <img src={englishFlag} alt="EN" className="w-[30px] h-5 mx-[5px] align-middle" />
-                <span>EN</span>
-              </a>
+            <div className="flex items-center space-x-6">
+              <div className="flex items-center space-x-4">
+                <button className="flex items-center space-x-2 px-3 py-2 rounded-full border border-[#003366] text-[#003366] hover:bg-[#003366] hover:text-white transition-colors">
+                  <img src={frenchFlag} alt="FR" className="w-6 h-4" />
+                  <span>FR</span>
+                </button>
+                <button className="flex items-center space-x-2 px-3 py-2 rounded-full border border-[#003366] text-[#003366] hover:bg-[#003366] hover:text-white transition-colors">
+                  <img src={englishFlag} alt="EN" className="w-6 h-4" />
+                  <span>EN</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
 
         {/* Navigation */}
-        <nav className="bg-[#003366] text-white text-sm font-bold px-0.5 py-0.5 flex justify-end">
-          <div className="flex-1 flex items-center">
-            {/* Admin Panel Title */}
-            <div className="flex items-center py-3 px-4">
-
+      </header>
+      <nav className="sticky z-50 top-0 bg-[#003366] shadow-lg">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center py-3">
               {adminName && (
-                <span className="text-sm text-gray-300 ml-2">
+                <span className="text-white font-medium">
                   Welcome, {adminName}
                 </span>
               )}
             </div>
 
-            {/* Navigation Links */}
-            <div className="hidden lg:flex items-center space-x-1">
-              <NavLink
-                to="/admin"
-                end
-                className="flex items-center py-3 px-4 hover:bg-blue-800 rounded-md"
-              >
-                <DashboardIcon />
-                <span>Dashboard</span>
-              </NavLink>
-              <NavLink
-                to="/admin/schools"
-                className="flex items-center py-3 px-4 hover:bg-blue-800 rounded-md"
-              >
-                <SchoolsIcon />
-                <span>Schools</span>
-              </NavLink>
-              <NavLink
-                to="/admin/contributions"
-                className="flex items-center py-3 px-4 hover:bg-blue-800 rounded-md"
-              >
-                <ContributionsIcon />
-                <span>Contributions</span>
-              </NavLink>
-              <NavLink
-                to="/admin/distribute"
-                className="flex items-center py-3 px-4 hover:bg-blue-800 rounded-md"
-              >
-                <DistributeIcon />
-                <span>Distribution</span>
-              </NavLink>
-              <NavLink
-                to="/admin/users"
-                className="flex items-center py-3 px-4 hover:bg-blue-800 rounded-md"
-              >
-                <AdminUsersIcon />
-                <span>Users</span>
-              </NavLink>
-              <NavLink
-                to="/admin/reports"
-                className="flex items-center py-3 px-4 hover:bg-blue-800 rounded-md"
-              >
-                <ReportsIcon />
-                <span>Reports</span>
-              </NavLink>
+            <div className="hidden lg:flex items-center space-x-2">
+              {[
+                { to: "/admin", icon: <DashboardIcon />, text: "Dashboard" },
+                { to: "/admin/schools", icon: <SchoolsIcon />, text: "Schools" },
+                { to: "/admin/contributions", icon: <ContributionsIcon />, text: "Contributions" },
+                { to: "/admin/distribute", icon: <DistributeIcon />, text: "Distribution" },
+                { to: "/admin/users", icon: <AdminUsersIcon />, text: "Users" },
+                { to: "/admin/reports", icon: <ReportsIcon />, text: "Reports" }
+              ].map((item) => (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  end={item.to === "/admin"}
+                  className={({ isActive }) =>
+                    `flex items-center px-4 py-2 rounded-md transition-all duration-200 hover:bg-blue-700 ${isActive ? 'bg-blue-700 text-white' : 'text-gray-100'
+                    }`
+                  }
+                >
+                  {item.icon}
+                  <span>{item.text}</span>
+                </NavLink>
+              ))}
             </div>
-          </div>
 
-          {/* Logout Button */}
-          <button
-            onClick={handleLogout}
-            className="flex items-center py-3 px-4 hover:bg-red-600 rounded-md"
-          >
-            <LogoutIcon />
-            <span>Logout</span>
-          </button>
-        </nav>
-      </header>
+            <button
+              onClick={handleLogout}
+              className="flex items-center px-4 py-2 text-white rounded-md transition-colors hover:bg-red-600"
+            >
+              <LogoutIcon />
+              <span>Logout</span>
+            </button>
+          </div>
+        </div>
+      </nav>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-x-hidden overflow-y-auto bg-[#f4f6f8] p-6 sm:p-8">
+      <main className=" bg-[#f4f6f8]">
         {children}
       </main>
 
