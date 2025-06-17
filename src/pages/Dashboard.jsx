@@ -112,7 +112,7 @@ function Dashboard() {
       >
         <div className="min-h-full bg-blue/100 backdrop-blur-sm px-8 py-10">
           <div className="space-y-10">
-            <h1 className="text-4xl font-bold mb-10 text-center text-white ">School Feeding Contributions For Intended Schools</h1>
+            <h1 className="text-4xl font-bold mb-10 text-center text-[#B5FCCD]">School Feeding Contributions For Intended Schools</h1>
 
             {/* Stats Overview */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -137,7 +137,7 @@ function Dashboard() {
 
             {/* Quick Actions / Navigation */}
             <div>
-              <h2 className="text-2xl font-semibold text-[#27548A] mb-4 mt-10">Manage System</h2>
+              <h2 className="text-2xl font-semibold text-[#B5FCCD] mb-4 mt-10">Manage System</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-6">
                 <ActionCard
                   to="/admin/contributions"

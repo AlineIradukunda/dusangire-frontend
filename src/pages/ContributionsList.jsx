@@ -254,7 +254,7 @@ function ContributionsList() {
       {/* Upload Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white p-8 rounded-lg w-[800px]">
+          <div className="bg-[#e0e6ea] p-8 rounded-lg w-[800px]">
             <h2 className="text-2xl font-semibold mb-4 text-[#27548A]">Upload Transfers</h2>
             <input type="file" accept=".xlsx,.xls" onChange={handleFileChange} />
             <div className="mt-4 flex justify-end gap-4">
@@ -274,7 +274,7 @@ function ContributionsList() {
       )}
 
       {/* Contributions Table */}
-      <div className="overflow-x-auto bg-white rounded-xl shadow-md mt-6">
+      <div className="overflow-x-auto bg-[#e0e6ea] rounded-xl shadow-md mt-6">
         <table className="min-w-full table-auto">
           <thead className="bg-[#27548A] text-white">
             <tr>
