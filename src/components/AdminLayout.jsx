@@ -92,73 +92,81 @@ function AdminLayout({ children }) {
 
   return (
     <div className="relative flex flex-col font-arial">
-      {/* Upper bar with contact info */}
-      <div className="bg-[#003366]">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex justify-between items-center px-4 py-2">
-            <div className="contact flex space-x-6 text-white text-sm">
-              <p className="flex items-center transition-transform hover:transform hover:translate-y-[-2px]">
-                <img src={locationIcon} alt="Location" className="w-4 h-4 mr-2 opacity-80" />
-                <span className="hidden md:inline">KG 205 St, Kigali Gasabo Kimironko</span>
-              </p>
-              <p className="flex items-center transition-transform hover:transform hover:translate-y-[-2px]">
-                <img src={mailIcon} alt="Mail" className="w-4 h-4 mr-2 opacity-80" />
-                <span className="hidden md:inline">umwalimu.sacco@umwalimusacco.rw</span>
-              </p>
-              <p className="flex items-center transition-transform hover:transform hover:translate-y-[-2px]">
-                <img src={phoneIcon} alt="Phone" className="w-4 h-4 mr-2 opacity-80" />
-                <span>+250 781 469 546</span>
-              </p>
-            </div>
-            <div className="social-links flex space-x-4">
-              {Object.entries(socialIcons).map(([platform, { icon, url }]) => (
-                <a
-                  key={platform}
-                  href={url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="transition-all hover:scale-110"
-                >
-                  <img src={icon} alt={platform} className="w-5 h-5 filter brightness-0 invert" />
-                </a>
-              ))}
+          <div className="bg-[#003366]">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex justify-between items-center px-4 py-2">
+          <div className="contact flex space-x-6 text-white text-sm">
+            <p className="flex items-center transition-transform hover:transform hover:translate-y-[-2px]">
+              <img src={locationIcon} alt="Location" className="w-4 h-4 mr-2 opacity-80 filter brightness-0 invert" />
+              <span className="hidden md:inline">KG 205 St, Kigali Gasabo Kimironko</span>
+            </p>
+            <p className="flex items-center transition-transform hover:transform hover:translate-y-[-2px]">
+              <img src={mailIcon} alt="Mail" className="w-4 h-4 mr-2 opacity-80 filter brightness-0 invert" />
+              <span className="hidden md:inline">umwalimu.sacco@umwalimusacco.rw</span>
+            </p>
+            <p className="flex items-center transition-transform hover:transform hover:translate-y-[-2px]">
+              <img src={phoneIcon} alt="Phone" className="w-4 h-4 mr-2 opacity-80 filter brightness-0 invert" />
+              <span>+250 781 469 546</span>
+            </p>
+          </div>
+          <div className="social-links flex space-x-4">
+            {Object.entries(socialIcons).map(([platform, { icon, url }]) => (
+              <a
+            key={platform}
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="transition-all hover:scale-110"
+              >
+            <img src={icon} alt={platform} className="w-5 h-5 filter brightness-0 invert" />
+              </a>
+            ))}
+          </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Header Content */}
-      <header className="shadow-md">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex justify-between items-center px-6 py-4">
-            <img src={logo} alt="Logo" className="w-[250px] transition-transform hover:scale-105" />
+        {/* Header Content */}
+        <header className="bg-white shadow-lg transition-all duration-300">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex justify-between items-center px-6 py-4">
+              <div className="flex items-center">
+                <img 
+                  src={logo} 
+                  alt="Logo" 
+                  className="w-[200px] transition-transform duration-300 hover:scale-105" 
+                />
+              </div>
 
-            <div className="flex items-center space-x-6">
-              <div className="flex items-center space-x-4">
-                <button className="flex items-center space-x-2 px-3 py-2 rounded-full border border-[#003366] text-[#003366] hover:bg-[#003366] hover:text-white transition-colors">
-                  <img src={frenchFlag} alt="FR" className="w-6 h-4" />
-                  <span>FR</span>
-                </button>
-                <button className="flex items-center space-x-2 px-3 py-2 rounded-full border border-[#003366] text-[#003366] hover:bg-[#003366] hover:text-white transition-colors">
-                  <img src={englishFlag} alt="EN" className="w-6 h-4" />
-                  <span>EN</span>
-                </button>
+              <div className="flex items-center space-x-8">
+                <div className="flex items-center space-x-4">
+                  <button className="group flex items-center space-x-2 px-3 py-1.5 rounded-lg border-2 border-[#003366] text-[#003366] hover:bg-[#003366] transition-all duration-300 ease-in-out">
+                    <img 
+                      src={frenchFlag} 
+                      alt="FR" 
+                      className="w-6 h-4 shadow-sm" 
+                    />
+                    <span className="font-medium group-hover:text-white">FR</span>
+                  </button>
+                  <button className="group flex items-center space-x-2 px-3 py-1.5 rounded-lg border-2 border-[#003366] text-[#003366] hover:bg-[#003366] transition-all duration-300 ease-in-out">
+                    <img 
+                      src={englishFlag} 
+                      alt="EN" 
+                      className="w-6 h-4 shadow-sm" 
+                    />
+                    <span className="font-medium group-hover:text-white">EN</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Navigation */}
+          {/* Navigation */}
       </header>
       <nav className="sticky z-50 top-0 bg-[#003366] shadow-lg">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between items-center">
             <div className="flex items-center py-3">
-              {adminName && (
-                <span className="text-white font-medium">
-                  Welcome, {adminName}
-                </span>
-              )}
             </div>
 
             <div className="hidden lg:flex items-center space-x-2">
@@ -175,7 +183,7 @@ function AdminLayout({ children }) {
                   to={item.to}
                   end={item.to === "/admin"}
                   className={({ isActive }) =>
-                    `flex items-center px-4 py-2 rounded-md transition-all duration-200 hover:bg-blue-700 ${isActive ? 'bg-blue-700 text-white' : 'text-gray-100'
+                    `flex items-center px-4 py-2 rounded-md transition-all duration-200 hover:bg-[#088395] ${isActive ? 'bg-[#508C9B] text-white' : 'text-gray-100'
                     }`
                   }
                 >
