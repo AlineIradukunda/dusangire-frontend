@@ -10,14 +10,11 @@ function ContributionsList() {
   const [isContributionModalOpen, setIsContributionModalOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploading, setUploading] = useState(false);
-
   const [searchTerm, setSearchTerm] = useState("");
   const [tempSearchTerm, setTempSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
-  const [filters, setFilters] = useState({
-    donor: "",
-  });
+  const [filters, setFilters] = useState({ donor: "" });
 
   useEffect(() => {
     fetchContributions();
@@ -68,7 +65,9 @@ function ContributionsList() {
       setSelectedFile(null);
     } catch (err) {
       if (err.response) {
-        setError(`Upload failed: ${err.response.data.message || err.response.statusText}`);
+        setError(
+          `Upload failed: ${err.response.data.message || err.response.statusText}`
+        );
       } else if (err.request) {
         setError("Network error. Please check your connection and try again.");
       } else {
@@ -175,8 +174,8 @@ function ContributionsList() {
           key={i}
           onClick={() => paginate(i)}
           className={`px-3 py-1 mx-1 rounded-lg ${currentPage === i
-            ? "bg-[#27548A] text-white"
-            : "border hover:bg-gray-100"
+              ? "bg-[#27548A] text-white"
+              : "border hover:bg-gray-100"
             }`}
         >
           {i}
@@ -188,7 +187,9 @@ function ContributionsList() {
 
   return (
     <div className="p-6">
-      <h1 className="text-4xl font-bold mb-10 text-center text-[#27548A]">Transfers Management</h1>
+      <h1 className="text-4xl font-bold mb-10 text-center text-[#27548A]">
+        Transfers Management
+      </h1>
 
       {/* Filters */}
       <div className="mb-6 flex flex-wrap gap-4">
@@ -210,7 +211,9 @@ function ContributionsList() {
         </div>
         <select
           value={filters.donor}
-          onChange={(e) => setFilters((prev) => ({ ...prev, donor: e.target.value }))}
+          onChange={(e) =>
+            setFilters((prev) => ({ ...prev, donor: e.target.value }))
+          }
           className="p-2 border rounded-lg focus:ring-[#27548A]"
         >
           <option value="">All Donors</option>
@@ -223,20 +226,57 @@ function ContributionsList() {
       </div>
 
       {/* Buttons */}
-      <div className="mb-8 flex justify-end gap-4">
+            {/* Action Buttons */}
+      <div className="mb-6 flex justify-end gap-4">
         <button
           onClick={() => setIsContributionModalOpen(true)}
-          className="bg-green-600 text-white px-6 py-3 rounded-lg shadow hover:bg-green-700"
+          className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700"
         >
-          + New Transfer
+          New Transfer
         </button>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="bg-[#27548A] text-white px-6 py-3 rounded-lg shadow hover:bg-[#1e3f68]"
+          className="bg-[#27548A] text-white px-4 py-2 rounded-lg hover:bg-[#1e3f68]"
         >
-          Upload Excel
+          Upload Excel File
         </button>
       </div>
+
+      {/* Contribution Modal */}
+      {isContributionModalOpen && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-[#27548A] p-8 rounded-lg w-[600px] max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-2xl font-semibold text-white">New Contribution</h2>
+              <button onClick={() => setIsContributionModalOpen(false)} className="text-white">✕</button>
+            </div>
+            <ContributionForm />
+          </div>
+        </div>
+      )}
+
+      {/* Upload Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white p-8 rounded-lg w-[800px]">
+            <h2 className="text-2xl font-semibold mb-4 text-[#27548A]">Upload Transfers</h2>
+            <input type="file" accept=".xlsx,.xls" onChange={handleFileChange} />
+            <div className="mt-4 flex justify-end gap-4">
+              <button onClick={() => setIsModalOpen(false)} className="px-4 py-2 border rounded">Cancel</button>
+              <button
+                onClick={handleUpload}
+                disabled={uploading}
+                className="bg-[#27548A] text-white px-6 py-2 rounded hover:bg-[#1e3f68]"
+              >
+                {uploading ? "Uploading..." : "Upload"}
+              </button>
+            </div>
+            {message && <p className="mt-4 text-green-600">{message}</p>}
+            {error && <p className="mt-4 text-red-600">{error}</p>}
+          </div>
+        </div>
+      )}
+
 
       {/* Table */}
       <div className="overflow-x-auto bg-[#e0e6ea] rounded-xl shadow-md mt-6">
@@ -260,7 +300,8 @@ function ContributionsList() {
             {currentItems.map((item, index) => (
               <tr
                 key={index}
-                className={`border-b hover:bg-gray-50 ${item.delete_status === "pending" ? "bg-yellow-100" : ""}`}
+                className={`border-b hover:bg-gray-50 ${item.delete_status === "pending" ? "bg-yellow-100" : ""
+                  }`}
               >
                 <td className="p-3">{indexOfFirstItem + index + 1}</td>
                 <td className="p-3">{item.SchoolCode}</td>
@@ -275,22 +316,18 @@ function ContributionsList() {
                 <td className="p-3 text-right">{formatNumber(item.Amount)}</td>
                 <td className="p-3 text-center">{item.NumberOfTransactions}</td>
                 <td className="p-3">{formatDate(item.timestamp)}</td>
-
-                {/* ✅ Status */}
                 <td className="p-3">
                   <span
-                    className={`inline-block px-2 py-1 rounded text-sm font-medium ${
-                      item.delete_status === "pending"
+                    className={`inline-block px-2 py-1 rounded text-sm font-medium ${item.delete_status === "pending"
                         ? "bg-yellow-200 text-yellow-800"
                         : item.delete_status === "deleted"
-                        ? "bg-red-200 text-red-800"
-                        : "bg-green-200 text-green-800"
-                    }`}
+                          ? "bg-red-200 text-red-800"
+                          : "bg-green-200 text-green-800"
+                      }`}
                   >
                     {item.delete_status || "active"}
                   </span>
                 </td>
-
                 <td className="p-3">
                   {item.delete_status === "pending" ? (
                     <button
@@ -322,6 +359,9 @@ function ContributionsList() {
         <button onClick={() => paginate(currentPage + 1)} disabled={currentPage === totalPages} className="px-3 py-1 border rounded-lg disabled:opacity-50">Next</button>
         <button onClick={() => paginate(totalPages)} disabled={currentPage === totalPages} className="px-3 py-1 border rounded-lg disabled:opacity-50">Last</button>
       </div>
+
+     
+         
     </div>
   );
 }

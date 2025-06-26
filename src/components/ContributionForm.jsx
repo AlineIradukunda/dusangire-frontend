@@ -138,7 +138,7 @@ function ContributionForm() {
             id="Donor"
             value={formData.Donor}
             onChange={(e) => setFormData({ ...formData, Donor: e.target.value })}
-            className="mt-1 block w-full py-3 rounded-lg shadow-sm text-gray-900"
+            className="mt-1 block w-full px-4 py-3 bg-white bg-opacity-25 rounded-lg shadow-sm text-gray-900"
           >
             <option value="Indiv through MoMo">Indiv through MoMo</option>
             <option value="METRO WORLD CHILD">METRO WORLD CHILD</option>
@@ -156,7 +156,7 @@ function ContributionForm() {
             id="contribution_type"
             value={formData.contribution_type}
             onChange={(e) => setFormData({ ...formData, contribution_type: e.target.value })}
-            className="mt-1 block w-full py-3 rounded-lg shadow-sm text-gray-900"
+            className="mt-1 block w-full px-4 py-3 bg-white bg-opacity-25 rounded-lg shadow-sm text-gray-900"
           >
             <option value="local_transfer">Local Transfer</option>
             <option value="momo">MoMo</option>
@@ -219,7 +219,7 @@ function ContributionForm() {
             id="schoolType"
             value={formData.schoolType}
             onChange={(e) => setFormData({ ...formData, schoolType: e.target.value })}
-            className="mt-1 block w-full py-3 rounded-lg shadow-sm text-gray-900"
+            className="mt-1 block w-full px-4 py-3 bg-white bg-opacity-25 rounded-lg shadow-sm text-gray-900"
           >
             <option value="general">General (All Schools)</option>
             <option value="specific">Specific School(s)</option>
