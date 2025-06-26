@@ -9,14 +9,22 @@ import API from "./api/api";
 import AdminLayout from "./components/AdminLayout";
 import AdminUsersPage from "./pages/AdminUsersPage";
 import AdminReportsPage from "./pages/AdminReportsPage";
+import PendingDeletions from "./pages/PendingDeletions";
+import TrashPage from "./pages/TrashPage";
 
-
-// ProtectedRoute component
-const ProtectedRoute = ({ children }) => {
+// ✅ ProtectedRoute component with role-based access
+const ProtectedRoute = ({ children, excludeRoles = [] }) => {
   const token = localStorage.getItem("accessToken");
+  const role = localStorage.getItem("userRole");
+
   if (!token) {
     return <Navigate to="/login" replace />;
   }
+
+  if (excludeRoles.includes(role)) {
+    return <Navigate to="/admin" replace />;
+  }
+
   API.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   return <AdminLayout>{children}</AdminLayout>;
 };
@@ -25,9 +33,11 @@ function App() {
   return (
     <Router>
       <Routes>
+        {/* Public routes */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<LoginPage />} />
 
+        {/* Admin dashboard */}
         <Route
           path="/admin"
           element={
@@ -36,6 +46,27 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        {/* Excluded for admin */}
+        <Route
+          path="/admin/pending-deletions"
+          element={
+            <ProtectedRoute excludeRoles={["admin"]}>
+              <PendingDeletions />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/trash"
+          element={
+            <ProtectedRoute excludeRoles={["admin"]}>
+              <TrashPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Shared access (admin & superuser) */}
         <Route
           path="/admin/contributions"
           element={
@@ -63,7 +94,7 @@ function App() {
         <Route
           path="/admin/users"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute excludeRoles={["admin"]}>
               <AdminUsersPage />
             </ProtectedRoute>
           }
@@ -76,8 +107,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-  
-
       </Routes>
     </Router>
   );

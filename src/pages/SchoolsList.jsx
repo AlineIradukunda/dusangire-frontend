@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import API from "../api/api";
 
-
 function SchoolsList() {
   const [schools, setSchools] = useState([]);
   const [error, setError] = useState("");
@@ -9,8 +8,8 @@ function SchoolsList() {
   const [formSuccess, setFormSuccess] = useState("");
   const [newSchool, setNewSchool] = useState({
     name: "",
-    district: "Unknown",  // Set default values
-    sector: "Unknown"     // Set default values
+    district: "Unknown",
+    sector: "Unknown"
   });
 
   const fetchSchools = () => {
@@ -23,9 +22,8 @@ function SchoolsList() {
     fetchSchools();
   }, []);
 
-  // Simplify handleInputChange to only handle name
   const handleInputChange = (e) => {
-    setNewSchool(prev => ({ ...prev, name: e.target.value }));
+    setNewSchool((prev) => ({ ...prev, name: e.target.value }));
   };
 
   const handleSubmitNewSchool = (e) => {
@@ -35,18 +33,40 @@ function SchoolsList() {
     API.createSchool(newSchool)
       .then(() => {
         setFormSuccess("School created successfully!");
-        setNewSchool({ name: "", district: "Unknown", sector: "Unknown" }); // Reset form
-        fetchSchools(); // Refresh the list
+        setNewSchool({ name: "", district: "Unknown", sector: "Unknown" });
+        fetchSchools();
       })
       .catch((err) => {
         const errorData = err.response?.data;
-        if (errorData && typeof errorData === 'object') {
-          const messages = Object.values(errorData).flat().join(' ');
-          setFormError(messages || "Failed to create school. Please check the details.");
-        } else {
-          setFormError("Failed to create school. An unknown error occurred.");
-        }
+        const messages = errorData && typeof errorData === "object"
+          ? Object.values(errorData).flat().join(" ")
+          : "Failed to create school. An unknown error occurred.";
+        setFormError(messages);
       });
+  };
+
+  const handleDelete = async (id) => {
+    const reason = prompt("Enter reason for deletion:");
+    if (!reason) return;
+
+    try {
+      const token = localStorage.getItem("accessToken");
+      await API.markSchoolAsPendingDelete(id, reason, token);
+      alert("School marked for deletion.");
+      fetchSchools();
+    } catch {
+      alert("Failed to delete school.");
+    }
+  };
+
+  const handleRecover = async (id) => {
+    try {
+      await API.recoverSchool(id);
+      alert("School recovered.");
+      fetchSchools();
+    } catch {
+      alert("Failed to recover school.");
+    }
   };
 
   return (
@@ -73,7 +93,7 @@ function SchoolsList() {
           </div>
           <button
             type="submit"
-            className="w-full sm:w-auto px-6 py-3 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-[#27548A] hover:bg-[#183B4E] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#27548A] focus:ring-offset-gray-100"
+            className="w-full sm:w-auto px-6 py-3 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-[#27548A] hover:bg-[#183B4E] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#27548A]"
           >
             Add School
           </button>
@@ -91,10 +111,33 @@ function SchoolsList() {
                   <div>
                     <p className="text-lg font-semibold text-[#27548A]">{school.name}</p>
                     <p className="text-sm text-gray-600">{school.district} - {school.sector}</p>
+                    <p className="text-sm text-red-500">
+                      {school.pending_deletion && `Pending Delete: ${school.delete_reason || "No reason provided"}`}
+                    </p>
                   </div>
-                  <p className="text-md font-medium">
-                    Total Received: <span className="text-green-600 font-semibold">{parseFloat(school.total_received).toFixed(2)} RWF</span>
-                  </p>
+                  <div className="text-right space-y-2">
+                    <p className="text-md font-medium">
+                      Total Received:{" "}
+                      <span className="text-green-600 font-semibold">
+                        {parseFloat(school.total_received).toFixed(2)} RWF
+                      </span>
+                    </p>
+                    {school.pending_deletion ? (
+                      <button
+                        onClick={() => handleRecover(school.id)}
+                        className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600"
+                      >
+                        Recover
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => handleDelete(school.id)}
+                        className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                      >
+                        Delete
+                      </button>
+                    )}
+                  </div>
                 </div>
               </li>
             ))}

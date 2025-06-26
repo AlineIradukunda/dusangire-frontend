@@ -19,7 +19,6 @@ const DashboardIcon = () => (
   </svg>
 );
 
-// Other icons...
 const ContributionsIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
     <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
@@ -56,10 +55,10 @@ const LogoutIcon = () => (
   </svg>
 );
 
-
 function AdminLayout({ children }) {
   const navigate = useNavigate();
   const [adminName, setAdminName] = useState("");
+  const userRole = localStorage.getItem("userRole");
 
   useEffect(() => {
     const storedUser = localStorage.getItem("adminUser");
@@ -92,6 +91,7 @@ function AdminLayout({ children }) {
 
   return (
     <div className="relative flex flex-col font-arial min-h-screen">
+      {/* Top contact bar */}
       <div className="bg-[#003366]">
         <div className="max-w-7xl mx-auto">
           <div className="flex justify-between items-center px-4 py-2">
@@ -111,13 +111,7 @@ function AdminLayout({ children }) {
             </div>
             <div className="social-links flex space-x-4">
               {Object.entries(socialIcons).map(([platform, { icon, url }]) => (
-                <a
-                  key={platform}
-                  href={url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="transition-all hover:scale-110"
-                >
+                <a key={platform} href={url} target="_blank" rel="noopener noreferrer" className="transition-all hover:scale-110">
                   <img src={icon} alt={platform} className="w-5 h-5 filter brightness-0 invert" />
                 </a>
               ))}
@@ -126,57 +120,37 @@ function AdminLayout({ children }) {
         </div>
       </div>
 
-      {/* Header Content */}
+      {/* Header logo and language */}
       <header className="bg-white shadow-lg transition-all duration-300">
         <div className="max-w-7xl mx-auto">
           <div className="flex justify-between items-center px-6 py-4">
-            <div className="flex items-center">
-              <img
-                src={logo}
-                alt="Logo"
-                className="w-[200px] transition-transform duration-300 hover:scale-105"
-              />
-            </div>
-
-            <div className="flex items-center space-x-8">
-              <div className="flex items-center space-x-4">
-                <button className="group flex items-center space-x-2 px-1.5 py-0.5 rounded-lg border-2 border-[#003366] text-[#003366] hover:bg-[#003366] transition-all duration-300 ease-in-out">
-                  <img
-                    src={frenchFlag}
-                    alt="FR"
-                    className="w-6 h-4 shadow-sm"
-                  />
-                  <span className="font-medium group-hover:text-white">FR</span>
-                </button>
-                <button className="group flex items-center space-x-2 px-1.5 py-0.5 rounded-lg border-2 border-[#003366] text-[#003366] hover:bg-[#003366] transition-all duration-300 ease-in-out">
-                  <img
-                    src={englishFlag}
-                    alt="EN"
-                    className="w-6 h-4 shadow-sm"
-                  />
-                  <span className="font-medium group-hover:text-white">EN</span>
-                </button>
-              </div>
+            <img src={logo} alt="Logo" className="w-[200px] transition-transform duration-300 hover:scale-105" />
+            <div className="flex items-center space-x-4">
+              <button className="group flex items-center space-x-2 px-1.5 py-0.5 rounded-lg border-2 border-[#003366] text-[#003366] hover:bg-[#003366] transition-all duration-300 ease-in-out">
+                <img src={frenchFlag} alt="FR" className="w-6 h-4 shadow-sm" />
+                <span className="font-medium group-hover:text-white">FR</span>
+              </button>
+              <button className="group flex items-center space-x-2 px-1.5 py-0.5 rounded-lg border-2 border-[#003366] text-[#003366] hover:bg-[#003366] transition-all duration-300 ease-in-out">
+                <img src={englishFlag} alt="EN" className="w-6 h-4 shadow-sm" />
+                <span className="font-medium group-hover:text-white">EN</span>
+              </button>
             </div>
           </div>
         </div>
-
-        {/* Navigation */}
       </header>
+
+      {/* Navigation */}
       <nav className="sticky z-50 top-0 bg-[#003366] shadow-lg">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-between items-center">
-            <div className="flex items-center py-3">
-            </div>
-
+            <div className="flex items-center py-3"></div>
             <div className="hidden lg:flex items-center space-x-2">
               {[
                 { to: "/admin", icon: <DashboardIcon />, text: "Dashboard" },
                 { to: "/admin/schools", icon: <SchoolsIcon />, text: "Schools" },
                 { to: "/admin/contributions", icon: <ContributionsIcon />, text: "Contributions" },
                 { to: "/admin/distribute", icon: <DistributeIcon />, text: "Distribution" },
-                { to: "/admin/users", icon: <AdminUsersIcon />, text: "Users" },
-                { to: "/admin/reports", icon: <ReportsIcon />, text: "Reports" }
+                { to: "/admin/reports", icon: <ReportsIcon />, text: "Reports" },
               ].map((item) => (
                 <NavLink
                   key={item.to}
@@ -191,8 +165,44 @@ function AdminLayout({ children }) {
                   <span>{item.text}</span>
                 </NavLink>
               ))}
-            </div>
 
+              {userRole === "superuser" && (
+                <>
+                  <NavLink
+                    to="/admin/users"
+                    className={({ isActive }) =>
+                      `flex items-center px-4 py-2 rounded-md transition-all duration-200 hover:bg-[#088395] ${isActive ? 'bg-[#508C9B] text-white' : 'text-gray-100'
+                      }`
+                    }
+                  >
+                    <AdminUsersIcon  />
+                    <span>Users</span>
+                  </NavLink>
+
+                  <NavLink
+                    to="/admin/pending-deletions"
+                    className={({ isActive }) =>
+                      `flex items-center px-4 py-2 rounded-md transition-all duration-200 hover:bg-[#088395] ${isActive ? 'bg-[#508C9B] text-white' : 'text-gray-100'
+                      }`
+                    }
+                  >
+                    <DistributeIcon />
+                    <span>Pending</span>
+                  </NavLink>
+
+                  <NavLink
+                    to="/admin/trash"
+                    className={({ isActive }) =>
+                      `flex items-center px-4 py-2 rounded-md transition-all duration-200 hover:bg-[#088395] ${isActive ? 'bg-[#508C9B] text-white' : 'text-gray-100'
+                      }`
+                    }
+                  >
+                    <ReportsIcon />
+                    <span>Trash</span>
+                  </NavLink>
+                </>
+              )}
+            </div>
             <button
               onClick={handleLogout}
               className="flex items-center px-4 py-2 text-white rounded-md transition-colors hover:bg-red-600"
@@ -209,6 +219,7 @@ function AdminLayout({ children }) {
         {children}
       </main>
 
+      {/* Footer */}
       <footer className="bg-[#003366] text-white text-center py-0.5">
         <p>
           Copyright © {new Date().getFullYear()} - Umwalimu Sacco Ltd Rwanda. All rights reserved.
@@ -220,3 +231,5 @@ function AdminLayout({ children }) {
 }
 
 export default AdminLayout;
+
+

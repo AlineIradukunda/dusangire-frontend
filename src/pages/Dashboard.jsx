@@ -30,7 +30,7 @@ function Dashboard() {
         ]);
 
         const totalTransfers = transfersRes.data.reduce(
-          (sum, t) => sum + parseFloat(t.Total_Amount),
+          (sum, t) => sum + parseFloat(t.Amount),
           0
         );
         const numberOfSchools = schoolsRes.data.length;

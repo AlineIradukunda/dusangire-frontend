@@ -5,18 +5,19 @@ import API from "../api/api";
 function ContributionForm() {
   const [formData, setFormData] = useState({
     SchoolCode: "",
-    Total_Amount: "",
+    Amount: "",
     Donor: "Indiv through MoMo",
     AccountNumber: "",
     NumberOfTransactions: "0",
     schoolType: "general",
+    contribution_type: "momo",
   });
+
   const [selectedSchools, setSelectedSchools] = useState([]);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [schoolOptions, setSchoolOptions] = useState([]);
 
-  // Add new state for creating schools
   const [newSchool, setNewSchool] = useState({ name: "", district: "", sector: "" });
   const [isCreatingSchool, setIsCreatingSchool] = useState(false);
 
@@ -32,7 +33,6 @@ function ContributionForm() {
       .catch(() => setError("Error loading schools"));
   }, []);
 
-  // Add createAndSelectSchool function
   const createAndSelectSchool = async () => {
     if (!newSchool.name || !newSchool.district || !newSchool.sector) {
       setError("Please fill in all school fields");
@@ -61,7 +61,8 @@ function ContributionForm() {
     const submissionData = {
       SchoolCode: formData.SchoolCode,
       Donor: formData.Donor,
-      Total_Amount: parseFloat(formData.Total_Amount) || 0,
+      contribution_type: formData.contribution_type,
+      Amount: parseFloat(formData.Amount) || 0,
       AccountNumber: formData.AccountNumber,
       NumberOfTransactions: parseInt(formData.NumberOfTransactions) || 0,
       school_ids: formData.schoolType === "specific"
@@ -73,16 +74,15 @@ function ContributionForm() {
 
     API.createTransfer(submissionData)
       .then((response) => {
-        console.log("Transfer response:", response);
         setMessage("Transfer recorded successfully!");
-        // Reset form
         setFormData({
           SchoolCode: "",
-          Total_Amount: "",
+          Amount: "",
           Donor: "Indiv through MoMo",
           AccountNumber: "",
           NumberOfTransactions: "0",
           schoolType: "general",
+          contribution_type: "momo",
         });
         setSelectedSchools([]);
       })
@@ -112,11 +112,10 @@ function ContributionForm() {
         </p>
       )}
       <form onSubmit={handleSubmit} className="space-y-6">
+
+        {/* School Code */}
         <div>
-          <label
-            htmlFor="SchoolCode"
-            className="block text-sm font-medium text-gray-300 text-left"
-          >
+          <label htmlFor="SchoolCode" className="block text-sm font-medium text-gray-300 text-left">
             School Code
           </label>
           <input
@@ -124,28 +123,22 @@ function ContributionForm() {
             type="text"
             placeholder="School Code"
             value={formData.SchoolCode}
-            onChange={(e) =>
-              setFormData({ ...formData, SchoolCode: e.target.value })
-            }
+            onChange={(e) => setFormData({ ...formData, SchoolCode: e.target.value })}
             required
-            className="mt-1 block w-full px-4 py-3 bg-white bg-opacity-25 border border-transparent rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 sm:text-sm text-gray-900"
+            className="mt-1 block w-full px-4 py-3 bg-white bg-opacity-25 rounded-lg shadow-sm text-gray-900"
           />
         </div>
 
+        {/* Donor */}
         <div>
-          <label
-            htmlFor="Donor"
-            className="block text-sm font-medium text-gray-300 text-left"
-          >
+          <label htmlFor="Donor" className="block text-sm font-medium text-gray-300 text-left">
             Donor
           </label>
           <select
             id="Donor"
             value={formData.Donor}
-            onChange={(e) =>
-              setFormData({ ...formData, Donor: e.target.value })
-            }
-            className="mt-1 block w-full pl-3 pr-10 py-3 bg-white bg-opacity-25 border border-transparent rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 sm:text-sm text-gray-900"
+            onChange={(e) => setFormData({ ...formData, Donor: e.target.value })}
+            className="mt-1 block w-full py-3 rounded-lg shadow-sm text-gray-900"
           >
             <option value="Indiv through MoMo">Indiv through MoMo</option>
             <option value="METRO WORLD CHILD">METRO WORLD CHILD</option>
@@ -154,106 +147,104 @@ function ContributionForm() {
           </select>
         </div>
 
+        {/* Contribution Type */}
         <div>
-          <label
-            htmlFor="AccountNumber"
-            className="block text-sm font-medium text-gray-300 text-left"
+          <label htmlFor="contribution_type" className="block text-sm font-medium text-gray-300 text-left">
+            Contribution Type
+          </label>
+          <select
+            id="contribution_type"
+            value={formData.contribution_type}
+            onChange={(e) => setFormData({ ...formData, contribution_type: e.target.value })}
+            className="mt-1 block w-full py-3 rounded-lg shadow-sm text-gray-900"
           >
+            <option value="local_transfer">Local Transfer</option>
+            <option value="momo">MoMo</option>
+            <option value="international_transfer">International Transfer</option>
+            <option value="lemitance">Lemitance</option>
+          </select>
+        </div>
+
+        {/* Account Number */}
+        <div>
+          <label htmlFor="AccountNumber" className="block text-sm font-medium text-gray-300 text-left">
             Account Number
           </label>
           <input
             id="AccountNumber"
             type="text"
             value={formData.AccountNumber}
-            onChange={(e) =>
-              setFormData({ ...formData, AccountNumber: e.target.value })
-            }
-            className="mt-1 block w-full px-4 py-3 bg-white bg-opacity-25 border border-transparent rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 sm:text-sm text-gray-900"
+            onChange={(e) => setFormData({ ...formData, AccountNumber: e.target.value })}
+            className="mt-1 block w-full px-4 py-3 bg-white bg-opacity-25 rounded-lg shadow-sm text-gray-900"
           />
         </div>
 
+        {/* Amount */}
         <div>
-          <label htmlFor="Total_Amount" className="block text-sm font-medium text-gray-300 text-left">
-            Total Amount (RWF)
+          <label htmlFor="Amount" className="block text-sm font-medium text-gray-300 text-left">
+            Amount (RWF)
           </label>
           <input
-            id="Total_Amount"
-            name="Total_Amount"
+            id="Amount"
             type="number"
             min="0"
-            placeholder="Amount"
-            value={formData.Total_Amount}
-            onChange={(e) => setFormData({ ...formData, Total_Amount: e.target.value })}
+            value={formData.Amount}
+            onChange={(e) => setFormData({ ...formData, Amount: e.target.value })}
             required
-            className="mt-1 block w-full px-4 py-3 bg-white bg-opacity-25 border border-transparent rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 sm:text-sm text-gray-900"
+            className="mt-1 block w-full px-4 py-3 bg-white bg-opacity-25 rounded-lg shadow-sm text-gray-900"
           />
         </div>
 
+        {/* Number of Transactions */}
         <div>
           <label htmlFor="NumberOfTransactions" className="block text-sm font-medium text-gray-300 text-left">
             Number of Transactions
           </label>
           <input
             id="NumberOfTransactions"
-            name="NumberOfTransactions"
             type="number"
             min="0"
             value={formData.NumberOfTransactions}
-            onChange={(e) => setFormData(prev => ({
-              ...prev,
-              NumberOfTransactions: e.target.value
-            }))}
-            className="mt-1 block w-full px-4 py-3 bg-white bg-opacity-25 border border-transparent rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 sm:text-sm text-gray-900"
+            onChange={(e) => setFormData({ ...formData, NumberOfTransactions: e.target.value })}
+            className="mt-1 block w-full px-4 py-3 bg-white bg-opacity-25 rounded-lg shadow-sm text-gray-900"
           />
         </div>
 
-        {/* School Type Selection */}
+        {/* School Type */}
         <div>
-          <label
-            htmlFor="schoolType"
-            className="block text-sm font-medium text-gray-300 text-left"
-          >
+          <label htmlFor="schoolType" className="block text-sm font-medium text-gray-300 text-left">
             School Type
           </label>
           <select
             id="schoolType"
             value={formData.schoolType}
-            onChange={(e) =>
-              setFormData({ ...formData, schoolType: e.target.value })
-            }
-            className="mt-1 block w-full pl-3 pr-10 py-3 bg-white bg-opacity-25 border border-transparent rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 sm:text-sm text-gray-900"
+            onChange={(e) => setFormData({ ...formData, schoolType: e.target.value })}
+            className="mt-1 block w-full py-3 rounded-lg shadow-sm text-gray-900"
           >
             <option value="general">General (All Schools)</option>
             <option value="specific">Specific School(s)</option>
           </select>
         </div>
 
-        {/* School Selection with Create Option */}
+        {/* School Selection */}
         {formData.schoolType === "specific" && (
           <div className="space-y-4">
-            <div>
-              <label
-                htmlFor="schools"
-                className="block text-sm font-medium text-gray-300 text-left mb-1"
-              >
-                Select School(s)
-              </label>
-              <Select
-                isMulti
-                options={schoolOptions}
-                value={selectedSchools}
-                onChange={setSelectedSchools}
-                placeholder="Select school(s)..."
-                className="text-gray-900"
-              />
-              <button
-                type="button"
-                onClick={() => setIsCreatingSchool(true)}
-                className="mt-2 text-sm text-blue-300 hover:text-blue-200"
-              >
-                + Add New School
-              </button>
-            </div>
+            <label className="block text-sm font-medium text-gray-300 text-left">Select School(s)</label>
+            <Select
+              isMulti
+              options={schoolOptions}
+              value={selectedSchools}
+              onChange={setSelectedSchools}
+              placeholder="Select school(s)..."
+              className="text-gray-900"
+            />
+            <button
+              type="button"
+              onClick={() => setIsCreatingSchool(true)}
+              className="text-sm text-blue-300 hover:text-blue-200"
+            >
+              + Add New School
+            </button>
 
             {/* New School Form */}
             {isCreatingSchool && (
@@ -307,7 +298,7 @@ function ContributionForm() {
         {/* Submit Button */}
         <button
           type="submit"
-          className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-[#183B4E] hover:bg-[#183B4E] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-400 focus:ring-offset-slate-800"
+          className="w-full py-3 px-4 bg-[#183B4E] text-white rounded-lg hover:bg-[#155060]"
         >
           Record Transfer
         </button>

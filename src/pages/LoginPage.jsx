@@ -22,6 +22,8 @@ function LoginPage() {
       .then((res) => {
         localStorage.setItem("accessToken", res.data.access);
         localStorage.setItem("refreshToken", res.data.refresh);
+        localStorage.setItem("userRole", res.data.role); 
+        localStorage.setItem("username", res.data.username);
         API.defaults.headers.common["Authorization"] = `Bearer ${res.data.access}`; // Update API instance header
         navigate("/admin");
       })
