@@ -1,4 +1,4 @@
-Dusangire Lunch – Frontend
+**Dusangire Lunch – Frontend**
 
 **Overview**
 
@@ -30,20 +30,20 @@ Key Features
 
 Project Structure
 src: 
-components: -AdminLayout.jsx and ContributionForm.jsx
-Pages: AdminDashboard.jsx, ContributionList.jsx, DistributionsPage.jsx, ReportsPage.jsx, LoginPage.jsx, PendingDeletion.jsx and TrashPage.jsx
-Services: api.js and auth.js
-utils: App.jsx and main.jsx
+* components: -AdminLayout.jsx and ContributionForm.jsx
+* Pages: AdminDashboard.jsx, ContributionList.jsx, DistributionsPage.jsx, ReportsPage.jsx, LoginPage.jsx, PendingDeletion.jsx and TrashPage.jsx
+* Services: api.js and auth.js
+* utils: App.jsx and main.jsx
 
-AdminUser Name
-Lionel 
-Password
-aline12345
-
-SuperUser's name
-admin
-Password
-admin123
+* AdminUser Name
+  Lionel
+* Password
+  aline12345
+  
+* SuperUser's name
+  admin
+* Password
+  admin123
 
 Open your browser at http://localhost:5173/
 
