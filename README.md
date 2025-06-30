@@ -39,14 +39,14 @@ src/
 
 Dashboard Login Credentials
 
-* AdminUser Name
+* AdminUser Name:
   aline
-* Password
+* Password:
   aline12345
   
-* SuperUser's name
+* SuperUser's name:
   admin
-* Password
+* Password:
   admin123
 
 Open your browser at http://localhost:5173/
