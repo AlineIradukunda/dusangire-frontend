@@ -29,11 +29,15 @@ Key Features
 * **Modular Design** with reusable components and API integration
 
 Project Structure
-src: 
+
+src/
+
 * components: -AdminLayout.jsx and ContributionForm.jsx
 * Pages: AdminDashboard.jsx, ContributionList.jsx, DistributionsPage.jsx, ReportsPage.jsx, LoginPage.jsx, PendingDeletion.jsx and TrashPage.jsx
 * Services: api.js and auth.js
 * utils: App.jsx and main.jsx
+
+Dashboard Login Credentials
 
 * AdminUser Name
   Lionel
