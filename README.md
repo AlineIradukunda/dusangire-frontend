@@ -40,7 +40,7 @@ src/
 Dashboard Login Credentials
 
 * AdminUser Name
-  Lionel
+  aline
 * Password
   aline12345
   
