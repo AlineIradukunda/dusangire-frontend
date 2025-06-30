@@ -1,6 +1,6 @@
 Dusangire Lunch – Frontend
 
-Overview
+**Overview**
 
 The **Dusangire Lunch Frontend** is a React-based web application designed for administrators and superusers to manage school feeding contributions in Rwanda. This platform supports viewing, uploading, editing, and analyzing donation and distribution records.
 
@@ -29,30 +29,11 @@ Key Features
 * **Modular Design** with reusable components and API integration
 
 Project Structure
-
-src
-│
-├── components         # Reusable UI components
-│   ├── AdminLayout.jsx
-│   ├── ContributionForm.jsx
-│
-├── pages              # Major pages for routes
-│   ├── AdminDashboard.jsx
-│   ├── TransfersList.jsx
-│   ├── DistributionsPage.jsx
-│   ├── ReportsPage.jsx
-│   ├── LoginPage.jsx
-│   ├── PendingDeletion.jsx
-│   ├── TrashPage.jsx
-│
-├── services           # Axios API logic
-│   ├── api.js
-│   ├── auth.js
-│
-├── utils              # Helper functions
-│
-├── App.tsx
-├── main.tsx
+src: 
+components: -AdminLayout.jsx and ContributionForm.jsx
+Pages: AdminDashboard.jsx, ContributionList.jsx, DistributionsPage.jsx, ReportsPage.jsx, LoginPage.jsx, PendingDeletion.jsx and TrashPage.jsx
+Services: api.js and auth.js
+utils: App.jsx and main.jsx
 
 AdminUser Name
 Lionel 
